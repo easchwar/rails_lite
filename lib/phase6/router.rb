@@ -23,7 +23,7 @@ module Phase6
       match_data.names.each do |key|
         route_params[key] = match_data[key]
       end
-      
+
       controller = @controller_class.new(req, res, route_params)
       controller.invoke_action(@action_name)
     end
@@ -64,9 +64,11 @@ module Phase6
     def run(req, res)
       route = match(req)
       if route
-        route.run
+        route.run(req, res)
       else
         res.status = 404
+        controller = ControllerBase.new(req, res)
+        controller.render_content("404: Unable to find page '#{req.path}' ", 'text/html')
       end
     end
   end
