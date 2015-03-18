@@ -28,8 +28,6 @@ module Controller
     def store_session(res)
       cook = WEBrick::Cookie.new('_rails_lite_app', @cookie.to_json)
       cook.path = '/'
-      # debugger
-      res.cookies.clear
       res.cookies << cook
     end
   end
