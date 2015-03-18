@@ -1,5 +1,3 @@
-require 'uri'
-
 module Controller
   class Params
     # use your initialize to merge params from

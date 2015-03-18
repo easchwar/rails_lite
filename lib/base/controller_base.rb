@@ -2,9 +2,7 @@ require 'active_support'
 require 'active_support/inflector'
 require 'active_support/core_ext'
 require 'erb'
-require_relative '../aux/params'
-require_relative '../aux/router'
-require_relative '../aux/session'
+require_relative '../aux/aux_require'
 
 module Controller
   class Base
@@ -25,6 +23,7 @@ module Controller
     # Set the response status code and header
     def redirect_to(url)
       session.store_session(@res)
+      flash.store_flash(@res)
 
       if already_built_response?
         raise 'Multiple render actions detected'
@@ -39,6 +38,7 @@ module Controller
     # Raise an error if the developer tries to double render.
     def render_content(content, content_type)
       session.store_session(@res)
+      flash.store_flash(@res)
 
       if already_built_response?
         raise 'Multiple render actions detected'
@@ -68,6 +68,11 @@ module Controller
     # method exposing a `Session` object
     def session
       @session ||= Session.new(@req)
+    end
+
+    #method exposing a Flash object
+    def flash
+      @flash ||= Flash.new(@req)
     end
   end
 end
