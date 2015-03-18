@@ -8,7 +8,7 @@ require_relative '../aux/session'
 
 module Controller
   class Base
-    attr_reader :req, :res
+    attr_reader :req, :res, :params
 
     # Setup the controller
     def initialize(req, res, route_params = {})

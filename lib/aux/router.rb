@@ -67,7 +67,7 @@ module Controller
         route.run(req, res)
       else
         res.status = 404
-        controller = ControllerBase.new(req, res)
+        controller = Controller::Base.new(req, res)
         controller.render_content("404: Unable to find page '#{req.path}' ", 'text/html')
       end
     end
