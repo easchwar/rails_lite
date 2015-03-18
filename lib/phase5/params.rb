@@ -40,27 +40,21 @@ module Phase5
     # should return
     # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
     def parse_www_encoded_form(www_encoded_form)
-      # query_params = {}
-      # ary = URI::decode_www_form(www_encoded_form)
-      # ary.each do |keyval|
-      #   query_params[el[0]] = el[1]
-      # end
-      # query_params
-
       query_params = {}
       ary = URI::decode_www_form(www_encoded_form)
+      
       ary.each do |keyval|
         val = keyval[1]
         keys = parse_key(keyval[0])
 
-        cur_depth = query_params
+        cur_node = query_params
         keys.each_with_index do |key, i|
           if i == keys.length - 1
-            cur_depth[key] = val
+            cur_node[key] = val
             break
           end
-          cur_depth[key] ||= {}
-          cur_depth = cur_depth[key]
+          cur_node[key] ||= {}
+          cur_node = cur_node[key]
         end
       end
       query_params
