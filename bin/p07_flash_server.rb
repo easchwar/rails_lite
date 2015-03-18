@@ -26,7 +26,7 @@ end
 
 router = Controller::Router.new
 router.draw do
-  get Regexp.new("^/count$"), MyController, :go
+  get Regexp.new("/count$"), MyController, :go
   get Regexp.new("^/errors$"), MyController, :now_flash
   get Regexp.new("^/error/redirect$"), MyController, :redir_flash
   get Regexp.new("^/error/bad$"), MyController, :bad_use_of_flash

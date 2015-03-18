@@ -3,7 +3,7 @@ module Controller
     attr_reader :pattern, :http_method, :controller_class, :action_name
 
     def initialize(pattern, http_method, controller_class, action_name)
-      @pattern = pattern
+      @pattern = make_regex(pattern)
       @http_method = http_method
       @controller_class = controller_class
       @action_name = action_name
@@ -26,6 +26,22 @@ module Controller
 
       controller = @controller_class.new(req, res, route_params)
       controller.invoke_action(@action_name)
+    end
+
+    private
+
+    def make_regex(pattern)
+      ary = pattern.split('/')
+
+      reg = ary.map do |el|
+        if el.starts_with?(":")
+          "(?<#{el[1..-1]}>\\d+)"
+        else
+          el
+        end
+      end
+
+      Regexp.new("^#{reg.join('/')}$")
     end
   end
 
@@ -52,6 +68,7 @@ module Controller
     [:get, :post, :put, :delete].each do |http_method|
       define_method(http_method) do |pattern, controller_class, action_name|
         add_route(pattern, http_method, controller_class, action_name)
+        RouteHelper::define_url_helper(pattern)
       end
     end
 
@@ -70,6 +87,12 @@ module Controller
         controller = Controller::Base.new(req, res)
         controller.render_content("404: Unable to find page '#{req.path}' ", 'text/html')
       end
+    end
+
+    private
+
+    def make_helper_name(pattern)
+
     end
   end
 end

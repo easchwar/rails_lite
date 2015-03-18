@@ -3,9 +3,12 @@ require 'active_support/inflector'
 require 'active_support/core_ext'
 require 'erb'
 require_relative '../aux/aux_require'
+require_relative '../helper/route_helper'
 
 module Controller
   class Base
+    include RouteHelper
+
     attr_reader :req, :res, :params
 
     # Setup the controller
