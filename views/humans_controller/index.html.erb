@@ -1,0 +1,7 @@
+<h1>INDEX</h1>
+
+<ul>
+  <% @humans.each do |human| %>
+  <li><a href="<%= humans_url(human.id) %>"><%= "#{human.fname} #{human.lname}" %></a></li>
+  <% end %>
+</ul>
