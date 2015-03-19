@@ -27,7 +27,7 @@ describe "the symphony of things" do
 
   describe "routes and params" do
     it "route instantiates controller and calls invoke action" do
-      route = Controller::Route.new(Regexp.new("^/statuses/(?<id>\\d+)$"), :get, Ctrlr, :route_render)
+      route = Controller::Route.new("/statuses/:id", :get, Ctrlr, :route_render)
       req.stub(:path) { "/statuses/1" }
       req.stub(:request_method) { "GET" }
       route.run(req, res)
@@ -35,7 +35,7 @@ describe "the symphony of things" do
     end
 
     it "route adds to params" do
-      route = Controller::Route.new(Regexp.new("^/statuses/(?<id>\\d+)$"), :get, Ctrlr, :route_does_params)
+      route = Controller::Route.new("/statuses/:id", :get, Ctrlr, :route_does_params)
       req.stub(:path) { "/statuses/1" }
       req.stub(:request_method) { "GET" }
       route.run(req, res)

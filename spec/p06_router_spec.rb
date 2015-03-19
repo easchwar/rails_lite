@@ -12,19 +12,19 @@ describe Controller::Route do
 
   describe "#matches?" do
     it "matches simple regular expression" do
-      index_route = Controller::Route.new(Regexp.new("^/users$"), :get, "x", :x)
+      index_route = Controller::Route.new("/users", :get, "x", :x)
       allow(req).to receive(:path).and_return("/users")
       index_route.matches?(req).should be true
     end
 
     it "matches regular expression with capture" do
-      index_route = Controller::Route.new(Regexp.new("^/users/(?<id>\\d+)$"), :get, "x", :x)
+      index_route = Controller::Route.new("/users/:id", :get, "x", :x)
       allow(req).to receive(:path).and_return("/users/1")
       index_route.matches?(req).should be true
     end
 
     it "correctly doesn't matche regular expression with capture" do
-      index_route = Controller::Route.new(Regexp.new("^/users/(?<id>\\d+)$"), :get, "UsersController", :index)
+      index_route = Controller::Route.new("/users/:id", :get, "UsersController", :index)
       allow(req).to receive(:path).and_return("/statuses/1")
       index_route.matches?(req).should be false
     end
@@ -46,7 +46,7 @@ describe Controller::Route do
       dummy_controller_class.stub(:new).with(req, res, {}) { dummy_controller_instance }
       dummy_controller_class.stub(:new).with(req, res) { dummy_controller_instance }
       dummy_controller_instance.should_receive(:invoke_action)
-      index_route = Controller::Route.new(Regexp.new("^/users$"), :get, dummy_controller_class, :index)
+      index_route = Controller::Route.new("/users", :get, dummy_controller_class, :index)
       index_route.run(req, res)
     end
   end
@@ -62,24 +62,24 @@ describe Controller::Router do
 
   describe "#add_route" do
     it "adds a route" do
-      subject.add_route(1, 2, 3, 4)
+      subject.add_route('1','2','3','4')
       subject.routes.count.should == 1
-      subject.add_route(1, 2, 3, 4)
-      subject.add_route(1, 2, 3, 4)
+      subject.add_route('1','2','3','4')
+      subject.add_route('1','2','3','4')
       subject.routes.count.should == 3
     end
   end
 
   describe "#match" do
     it "matches a correct route" do
-      subject.add_route(Regexp.new("^/users$"), :get, :x, :x)
+      subject.add_route("/users", :get, :x, :x)
       allow(req).to receive(:path).and_return("/users")
       matched = subject.match(req)
       matched.should_not be_nil
     end
 
     it "doesn't match an incorrect route" do
-      subject.add_route(Regexp.new("^/users$"), :get, :x, :x)
+      subject.add_route("/users", :get, :x, :x)
       allow(req).to receive(:path).and_return("/incorrect_path")
       matched = subject.match(req)
       matched.should be_nil
@@ -88,7 +88,7 @@ describe Controller::Router do
 
   describe "#run" do
     it "sets status to 404 if no route is found" do
-      subject.add_route(1, 2, 3, 4)
+      subject.add_route('1','2','3','4')
       allow(req).to receive(:path).and_return("/users")
       subject.run(req, res)
       res.status.should == 404
@@ -106,7 +106,7 @@ describe Controller::Router do
 
     it "adds a route when an http method method is called" do
       router = Controller::Router.new
-      router.get Regexp.new("^/users$"), Controller::Base, :index
+      router.get "/users", Controller::Base, :index
       router.routes.count.should == 1
     end
   end
