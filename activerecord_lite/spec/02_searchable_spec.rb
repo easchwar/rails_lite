@@ -1,4 +1,4 @@
-require '02_searchable'
+require_relative '../lib/02_searchable'
 
 describe 'Searchable' do
   before(:each) { DBConnection.reset }
